@@ -46,7 +46,7 @@ func InsightImage(entryURL string) {
 }
 
 // InsightJSONImage - fetch images by given json url
-// TODO: use channel to async
+// TODO: use channel to async and decorate url with `#ID` instead of using global map
 func InsightJSONImage(jsonURL string) {
 
 	// Instantiate default collector
@@ -62,6 +62,7 @@ func InsightJSONImage(jsonURL string) {
 	// OnHTML must be set before Visit
 	c.OnHTML("div.wp #container a[data-id] img[data-original]", func(e *colly.HTMLElement) {
 		link := e.Attr("data-original")
+		fmt.Println(link)
 		util.Download(link, e.Request.Ctx.Get("ID"))
 	})
 

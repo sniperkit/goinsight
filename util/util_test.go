@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/shohi/goinsight/model"
 )
@@ -79,7 +80,7 @@ func TestURLParse(t *testing.T) {
 
 func TestGetPageURLs(t *testing.T) {
 	baseURL := "http://localhost:9090/app/list?page=1&action=list"
-	urls := GetPageURLs(baseURL, 10)
+	urls := GetPageURLs(baseURL, 10, true)
 	fmt.Println(urls)
 }
 
@@ -88,4 +89,10 @@ func TestGetPageParamter(t *testing.T) {
 	page := GetPageParamter(baseURL)
 
 	fmt.Println(page)
+}
+
+func TestTimeSubtract(t *testing.T) {
+	start := time.Now()
+	time.Sleep(1 * time.Second)
+	fmt.Println(time.Since(start))
 }

@@ -3,6 +3,7 @@ package basic
 import (
 	"fmt"
 	"net/url"
+	"sync"
 
 	"github.com/asciimoo/colly"
 	"github.com/shohi/goinsight/model"
@@ -45,6 +46,7 @@ func InsightImage(entryURL string) {
 }
 
 // InsightJSONImage - fetch images by given json url
+// TODO: use channel to async
 func InsightJSONImage(jsonURL string) {
 
 	// Instantiate default collector
@@ -57,10 +59,9 @@ func InsightJSONImage(jsonURL string) {
 	// Set URLs
 	m := getImageURLs(jsonURL)
 
-	// OnHTML must set before visit
+	// OnHTML must be set before Visit
 	c.OnHTML("div.wp #container a[data-id] img[data-original]", func(e *colly.HTMLElement) {
 		link := e.Attr("data-original")
-		fmt.Println(link)
 		util.Download(link, e.Request.Ctx.Get("ID"))
 	})
 
@@ -72,8 +73,11 @@ func InsightJSONImage(jsonURL string) {
 
 	// Start scrapping
 	for url := range m {
-		c.Visit(url)
+		go func(u string) {
+			c.Visit(u)
+		}(url)
 	}
+	c.Wait()
 }
 
 func getImageURLs(baseURL string) map[string]string {
@@ -99,10 +103,18 @@ func getImageURLs(baseURL string) map[string]string {
 		return m
 	}
 
+	// use goroutines to load json url
+	var wg sync.WaitGroup
+	wg.Add(len(jsonURLs))
+
 	for _, url := range jsonURLs {
-		appendImageURLs(rootURL, url, m)
+		go func(u string) {
+			defer wg.Done()
+			appendImageURLs(rootURL, u, m)
+		}(url)
 	}
 
+	wg.Wait()
 	return m
 }
 

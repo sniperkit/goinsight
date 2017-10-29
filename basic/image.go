@@ -55,20 +55,7 @@ func InsightJSONImage(jsonURL string) {
 	// c.CacheDir = "./image_cache"
 
 	// Set URLs
-	m := make(map[string]string)
-	u, _ := url.Parse(jsonURL)
-	rootURL := u.Scheme + "://" + u.Host
-	info, err := util.LoadImageJSON(jsonURL)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	imageList := info.(*model.ImageCollection)
-	for _, v := range imageList.List {
-		tURL := rootURL + v.URL
-		m[tURL] = v.ID
-	}
+	m := getImageURLs(jsonURL)
 
 	// OnHTML must set before visit
 	c.OnHTML("div.wp #container a[data-id] img[data-original]", func(e *colly.HTMLElement) {
@@ -89,14 +76,15 @@ func InsightJSONImage(jsonURL string) {
 	}
 }
 
-func getImageURLs(baseURL string) (m map[string]string) {
+func getImageURLs(baseURL string) map[string]string {
+	m := make(map[string]string)
 	u, _ := url.Parse(baseURL)
 	rootURL := u.Scheme + "://" + u.Host
 
 	info, err := util.LoadImageJSON(baseURL)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return m
 	}
 
 	imageList := info.(*model.ImageCollection)
@@ -108,14 +96,14 @@ func getImageURLs(baseURL string) (m map[string]string) {
 	// load other url
 	jsonURLs := util.GetPageURLs(baseURL, imageList.Pages, true)
 	if len(jsonURLs) < 1 {
-		return
+		return m
 	}
 
 	for _, url := range jsonURLs {
 		appendImageURLs(rootURL, url, m)
 	}
 
-	return
+	return m
 }
 
 func appendImageURLs(rootURL, jsonURL string, m map[string]string) {

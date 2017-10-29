@@ -7,12 +7,12 @@ import (
 	"github.com/asciimoo/colly"
 )
 
-// InsightGithub - fetch github repos' stared and forking data
-// and conclude some insights
-
 var searchBaseURL = "https://github.com/search?q="
 var sep, collapse = ":", "+"
 
+
+// InsightGithub - fetch github repos' stared and forking data
+// and conclude some insights
 func InsightGithub() {
 	// Instantiate default collector
 	c := colly.NewCollector()

@@ -20,7 +20,7 @@ func InsightImage(entryURL string) {
 
 	// Cache responses to prevent multiple download of pages
 	// even if the collector is restarted
-	c.CacheDir = "./image_cache"
+	c.CacheDir = "./_cache"
 	detailCollector.CacheDir = c.CacheDir
 
 	// On every a element which has href attribute call callback
@@ -54,7 +54,7 @@ func InsightJSONImage(jsonURL string) {
 
 	// Cache responses to prevent multiple download of pages
 	// even if the collector is restarted
-	// c.CacheDir = "./image_cache"
+	c.CacheDir = "./_cache"
 
 	// Set URLs
 	m := getImageURLs(jsonURL)

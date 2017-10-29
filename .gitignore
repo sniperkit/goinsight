@@ -14,8 +14,11 @@
 .glide/
 
 # default download directory 
-_dl
+_dl/
+
+# cache directory
+*_cache/
 
 # temporary directory and file
-tmp
+tmp/
 *.tmp

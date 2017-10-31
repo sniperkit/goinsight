@@ -14,7 +14,7 @@ func TestJoinMap(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got := joinMap(c.input)
+		got := GithubInsighter.joinMap(c.input)
 		if got != c.want {
 			t.Errorf("joinMap(%q) == %v, want %v", c.input, got, c.want)
 		}

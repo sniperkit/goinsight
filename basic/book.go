@@ -6,8 +6,11 @@ import (
 	"github.com/asciimoo/colly"
 )
 
-// InsightBook fetch book data from douban and conclude some insights
-func InsightBook() {
+// BookInsighter - fetch book data from douban and conclude some insights
+type BookInsighter struct{}
+
+// Insight - insight book data
+func (i *BookInsighter) Insight(url string) {
 
 	// Instantiate default collector
 	c := colly.NewCollector()

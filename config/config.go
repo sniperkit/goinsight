@@ -9,10 +9,15 @@ var (
 
 	// DirName - the directory to save downloaded files
 	DirName string
+
+	// Type - search type
+	Type string
 )
 
 func init() {
 
 	flag.StringVar(&MainURL, "url", "", "entry url for scrapping")
 	flag.StringVar(&DirName, "dir", "_dl", "download directory")
+	flag.StringVar(&Type, "type", "image", "search type")
+
 }

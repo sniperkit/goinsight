@@ -7,13 +7,18 @@ import (
 	"github.com/asciimoo/colly"
 )
 
-var searchBaseURL = "https://github.com/search?q="
-var sep, collapse = ":", "+"
+type cvsInsighter struct {
+	BaseURL  string
+	Sep      string
+	Collapse string
+}
 
+// GithubInsighter -- search repos in github
+var GithubInsighter = &cvsInsighter{"https://github.com/search?q=", ":", "+"}
 
 // InsightGithub - fetch github repos' stared and forking data
 // and conclude some insights
-func InsightGithub() {
+func (i *cvsInsighter) Insight(_ string) {
 	// Instantiate default collector
 	c := colly.NewCollector()
 
@@ -40,15 +45,15 @@ func InsightGithub() {
 		"language": "go",
 		"stars":    ">500",
 	}
-	c.Visit(searchBaseURL + joinMap(m))
+	c.Visit(i.BaseURL + i.joinMap(m))
 
 }
 
-func joinMap(m map[string]string) string {
+func (i *cvsInsighter) joinMap(m map[string]string) string {
 	var entries []string
 	for k, v := range m {
-		entries = append(entries, k+sep+v)
+		entries = append(entries, k+i.Sep+v)
 	}
 
-	return strings.Join(entries, collapse)
+	return strings.Join(entries, i.Collapse)
 }

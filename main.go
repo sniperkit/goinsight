@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/shohi/goinsight/basic"
 	"github.com/shohi/goinsight/config"
+	"github.com/shohi/goinsight/router"
 )
 
 func main() {
@@ -23,5 +23,5 @@ func main() {
 		panic("url should be set!")
 	}
 
-	basic.InsightJSONImage(config.MainURL)
+	router.Route(config.Type, config.MainURL)
 }

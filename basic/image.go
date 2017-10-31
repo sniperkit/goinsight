@@ -10,9 +10,16 @@ import (
 	"github.com/shohi/goinsight/util"
 )
 
-// InsightImage - fetch images, urls follow below form
+// JSONImageInsighter - fetch images by given json url
+// TODO: use channel to async and decorate url with `#ID` instead of using global map
+type JSONImageInsighter struct{}
+
+// ImageInsighter - fetch images, urls follow below form
 // index page and detail & next page, final image url in detail page
-func InsightImage(entryURL string) {
+type ImageInsighter struct{}
+
+// Insight - insight image
+func (i *ImageInsighter) Insight(entryURL string) {
 
 	// Instantiate default collector
 	c := colly.NewCollector()
@@ -45,9 +52,8 @@ func InsightImage(entryURL string) {
 	c.Visit(entryURL)
 }
 
-// InsightJSONImage - fetch images by given json url
-// TODO: use channel to async and decorate url with `#ID` instead of using global map
-func InsightJSONImage(jsonURL string) {
+// Insight - insight image
+func (i *JSONImageInsighter) Insight(jsonURL string) {
 
 	// Instantiate default collector
 	c := colly.NewCollector()

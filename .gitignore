@@ -18,6 +18,7 @@ _dl/
 
 # cache directory
 *_cache/
+*_script/
 
 # temporary directory and file
 tmp/

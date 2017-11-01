@@ -29,12 +29,13 @@ type bookInsighter struct {
 
 // Book - book info
 type Book struct {
-	SubjectID   string
-	Title       string
-	OriginTitle string
-	ImageURL    string
-	URL         string
+	URL       string
+	SubjectID string
+	Title     string
+	ImageURL  string
+
 	Author      string
+	OriginTitle string
 	Publisher   string
 	Translator  string
 	PubYear     string
@@ -149,8 +150,14 @@ func (i *bookInsighter) parseFromRespone(res *colly.Response) (*Book, error) {
 	var book Book
 
 	// Get Title and SubjectID
+	book.URL = res.Request.URL.String()
 	book.Title = doc.Find("#dale_book_subject_top_icon + h1 span").First().Text()
 	book.SubjectID = i.getSubjectID(res.Request.URL.String())
+	if src, exists := doc.Find("#mainpic a.nbg img").First().Attr("src"); exists {
+		book.ImageURL = src
+	}
+
+	//
 
 	return &book, nil
 }

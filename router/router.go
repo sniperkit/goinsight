@@ -1,7 +1,11 @@
 // Package router -- route insight request based on type
 package router
 
-import "github.com/shohi/goinsight/basic"
+import (
+	"fmt"
+
+	"github.com/shohi/goinsight/basic"
+)
 
 func Route(t, url string) {
 	var insighter basic.Insighter
@@ -9,14 +13,15 @@ func Route(t, url string) {
 	case "image":
 		insighter = &basic.ImageInsighter{}
 	case "image-json":
-		insighter = &basic.ImageInsighter{}
+		insighter = &basic.JSONImageInsighter{}
 	case "github":
 		insighter = basic.GithubInsighter
 	case "book":
-		insighter = &basic.BookInsighter{}
+		insighter = basic.DoubanInsighter
 	default:
 		insighter = nil
 	}
 
+	fmt.Println(insighter)
 	insighter.Insight(url)
 }

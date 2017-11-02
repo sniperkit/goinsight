@@ -1,24 +1,115 @@
 // Package config - contains all global configurations that should be set once at the startup
 package config
 
-import "flag"
+import (
+	"os"
 
-var (
-	// MainURL - the first entry url when scrapping
-	MainURL string
+	"golang.org/x/net/context"
 
-	// DirName - the directory to save downloaded files
-	DirName string
-
-	// Type - search type
-	Type string
+	"github.com/dgraph-io/badger"
+	"github.com/shohi/goinsight/util"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
-func init() {
+type baseConfig struct {
+	// search type
+	Type string
+}
 
-	// TODO: use toml instead of command line
-	flag.StringVar(&MainURL, "url", "", "entry url for scrapping")
-	flag.StringVar(&DirName, "dir", "_dl", "download directory")
-	flag.StringVar(&Type, "type", "image", "search type")
+type badgerConfig struct {
+	Dir      string
+	ValueDir string
+}
 
+type commonConfig struct {
+	// entry url for scrapping
+	URL string
+
+	// download directory
+	DirName string
+}
+
+type BookConfig struct {
+	commonConfig
+}
+
+type JSONImageConfig struct {
+	commonConfig
+	ThresHold int
+}
+
+type ImageConfig struct {
+	commonConfig
+}
+
+var (
+	BaseConfig   baseConfig
+	BadgerConfig badgerConfig
+	DB           *badger.DB
+)
+
+var logger = zap.NewExample().Sugar()
+
+// Init - load configs from file
+func Init(ctx context.Context) {
+	err := loadTOML()
+	if err != nil {
+		panic(err)
+	}
+
+	//
+	baseCfg := viper.Sub("base")
+	baseCfg.Unmarshal(&BaseConfig)
+
+	badgerConfig := viper.Sub("badger")
+	badgerConfig.Unmarshal(&BadgerConfig)
+
+	//
+	initDB(ctx)
+
+}
+
+func loadTOML() error {
+	viper.SetConfigName("config") // name of config file (without extension)
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// InitDB - init badger
+func initDB(ctx context.Context) {
+	// Open the Badger database located in the /tmp/badger directory.
+	// It will be created if it doesn't exist.
+
+	opts := badger.DefaultOptions
+	opts.Dir = BadgerConfig.Dir
+	opts.ValueDir = BadgerConfig.ValueDir
+
+	if exists, err := util.Exists(opts.Dir); !exists || (err != nil) {
+		err = os.MkdirAll(opts.Dir, os.ModePerm)
+		if err != nil {
+			logger.Fatal(err)
+			panic("Init DB Error")
+		}
+	}
+
+	db, err := badger.Open(opts)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	// close db when context is done
+	go func() {
+		select {
+		case <-ctx.Done():
+			logger.Info("DB to be closed")
+			db.Close()
+		}
+	}()
+
+	DB = db
 }

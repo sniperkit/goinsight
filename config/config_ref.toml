@@ -1,0 +1,23 @@
+# Configuration
+[base]
+Type = "json-image"
+
+[badger]
+Dir = "_db/badger"
+ValueDir = "_db/badger"
+
+
+[json-image]
+URL = ""
+DownloadDir = "_dl/image"
+CacheDir = "_cache"
+ThresHold = 50000
+
+
+[book]
+URL = ""
+DownloadDir = "_dl/book"
+
+[github]
+URL = ""
+DownloadDir = "_dl/github"

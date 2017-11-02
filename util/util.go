@@ -2,39 +2,26 @@
 package util
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
-	"github.com/shohi/goinsight/config"
-	"github.com/shohi/goinsight/model"
 	"github.com/valyala/fasthttp"
+	"go.uber.org/zap"
 )
 
 var client = &fasthttp.Client{}
 
 // Download download files from given url
-func Download(url string, subdir string) error {
-	filename := FilenameFromURL(url)
-	var fp string
-	if strings.Compare(subdir, "") == 0 {
-		fp = filepath.Join(config.DirName, filename)
-	} else {
-		fp = filepath.Join(config.DirName, subdir, filename)
-	}
-
-	if exists, _ := exists(fp); exists {
-		log.Println(fp, " exists ")
+func Download(url, fp string, overwrite bool) error {
+	if exists, _ := Exists(fp); exists && !overwrite {
 		return nil
 	}
-
 	file, err := CreateFile(fp)
 	if err != nil {
 		return err
@@ -72,8 +59,8 @@ func CreateFile(fp string) (*os.File, error) {
 	return os.OpenFile(fp, os.O_WRONLY|os.O_CREATE, 0600)
 }
 
-// exists returns whether the given file or directory exists or not
-func exists(path string) (bool, error) {
+// Exists returns whether the given file or directory exists or not
+func Exists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
 		return true, nil
@@ -82,34 +69,6 @@ func exists(path string) (bool, error) {
 		return false, nil
 	}
 	return true, err
-}
-
-// LoadImageJSON -- loads image json info
-func LoadImageJSON(url string) (interface{}, error) {
-
-	client := &fasthttp.Client{}
-	statusCode, body, err := client.Get(nil, url)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if statusCode != fasthttp.StatusOK {
-		return nil, errors.New("Status Code Is Not OK")
-	}
-
-	var info model.ImageCollection
-
-	// The BOM identifies that the text is UTF-8 encoded, but it should be removed before decoding.
-	// https://stackoverflow.com/questions/31398044/got-error-invalid-character-%C3%AF-looking-for-beginning-of-value-from-json-unmar
-	body = bytes.TrimPrefix(body, []byte("\xef\xbb\xbf"))
-	err = json.Unmarshal(body, &info)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &info, nil
 }
 
 // GetPageURLs - parse given url and generate several urls with different page number
@@ -145,4 +104,25 @@ func GetPageParamter(baseURL string) string {
 	}
 
 	return m["page"][0]
+}
+
+// LogProcessTime - log process time
+func LogProcessTime(logger *zap.Logger, startT time.Time) {
+	endT := time.Now()
+	logger.Info("", zap.String("process time", endT.Sub(startT).String()))
+}
+
+// GetContent - get content directed by url
+func GetContent(url string) ([]byte, error) {
+	statusCode, body, err := client.Get(nil, url)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if statusCode != fasthttp.StatusOK {
+		return nil, errors.New("Status Code Is Not OK")
+	}
+
+	return body, nil
 }

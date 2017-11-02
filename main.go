@@ -1,27 +1,22 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-	"strings"
 	"time"
 
 	"github.com/shohi/goinsight/config"
 	"github.com/shohi/goinsight/router"
+	"github.com/shohi/goinsight/util"
+	"golang.org/x/net/context"
 )
 
 func main() {
+	defer util.LogProcessTime(time.Now())
 
-	flag.Parse()
-	startT := time.Now()
-	defer func() {
-		endT := time.Now()
-		fmt.Println("process using ", endT.Sub(startT))
-	}()
+	ctx := context.WithCacel(context.Background())
 
-	if strings.Compare(config.MainURL, "") == 0 {
-		panic("url should be set!")
-	}
+	// load config
+	config.Init(ctx)
 
-	router.Route(config.Type, config.MainURL)
+	// route
+	router.Route(ctx)
 }

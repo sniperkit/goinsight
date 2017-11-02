@@ -2,40 +2,16 @@
 package router
 
 import (
-	"fmt"
+	"golang.org/x/net/context"
 
-	// "github.com/dgraph-io/badger"
 	"github.com/shohi/goinsight/basic"
+	"github.com/shohi/goinsight/config"
+	"github.com/spf13/viper"
 )
 
-func Route(t, url string) {
-
-	/*
-		// Open the Badger database located in the /tmp/badger directory.
-		// It will be created if it doesn't exist.
-		opts := badger.DefaultOptions
-		opts.Dir = "/tmp/badger"
-		opts.ValueDir = "/tmp/badger"
-		db, err := badger.Open(opts)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer db.Close()
-	*/
+func Route(ctx context.Context) {
 	var insighter basic.Insighter
-	switch t {
-	case "image":
-		insighter = &basic.ImageInsighter{}
-	case "image-json":
-		insighter = &basic.JSONImageInsighter{}
-	case "github":
-		insighter = basic.GithubInsighter
-	case "book":
-		insighter = basic.DoubanInsighter
-	default:
-		insighter = nil
-	}
-
-	fmt.Println(insighter)
-	insighter.Insight(url)
+	t := config.BaseConfig.Type
+	insighter = &basic.ImageInsighter{Config: viper.Sub(t)}
+	insighter.Insight()
 }

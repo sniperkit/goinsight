@@ -19,7 +19,11 @@ _dl/
 # cache directory
 *_cache/
 *_script/
+*_db/
 
 # temporary directory and file
 tmp/
 *.tmp
+
+# config toml
+config.toml

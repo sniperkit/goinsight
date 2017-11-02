@@ -7,6 +7,7 @@ type ImageInfo struct {
 	URL    string                 `json:"arcurl"`
 	Click  string                 `json:"click"`
 	PicNum int                    `json:"picnum"`
+	Stow   string                 `json:"stow"`
 	X      map[string]interface{} `json:"-"`
 }
 

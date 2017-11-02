@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -17,16 +18,21 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
+var client = &fasthttp.Client{}
+
 // Download download files from given url
 func Download(url string, subdir string) error {
-	client := &fasthttp.Client{}
-
 	filename := FilenameFromURL(url)
 	var fp string
 	if strings.Compare(subdir, "") == 0 {
 		fp = filepath.Join(config.DirName, filename)
 	} else {
 		fp = filepath.Join(config.DirName, subdir, filename)
+	}
+
+	if exists, _ := exists(fp); exists {
+		log.Println(fp, " exists ")
+		return nil
 	}
 
 	file, err := CreateFile(fp)

@@ -16,6 +16,7 @@ var (
 
 func init() {
 
+	// TODO: use toml instead of command line
 	flag.StringVar(&MainURL, "url", "", "entry url for scrapping")
 	flag.StringVar(&DirName, "dir", "_dl", "download directory")
 	flag.StringVar(&Type, "type", "image", "search type")

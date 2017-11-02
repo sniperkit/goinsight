@@ -2,7 +2,9 @@ package basic
 
 import (
 	"fmt"
+	"log"
 	"net/url"
+	"strconv"
 	"sync"
 
 	"github.com/asciimoo/colly"
@@ -17,6 +19,8 @@ type JSONImageInsighter struct{}
 // ImageInsighter - fetch images, urls follow below form
 // index page and detail & next page, final image url in detail page
 type ImageInsighter struct{}
+
+var clickThreshold = 50000
 
 // Insight - insight image
 func (i *ImageInsighter) Insight(entryURL string) {
@@ -69,7 +73,9 @@ func (i *JSONImageInsighter) Insight(jsonURL string) {
 	c.OnHTML("div.wp #container a[data-id] img[data-original]", func(e *colly.HTMLElement) {
 		link := e.Attr("data-original")
 		fmt.Println(link)
-		util.Download(link, e.Request.Ctx.Get("ID"))
+		if err := util.Download(link, e.Request.Ctx.Get("ID")); err != nil {
+			log.Println(err.Error())
+		}
 	})
 
 	// Before making a request print "Visiting ..."
@@ -100,6 +106,10 @@ func getImageURLs(baseURL string) map[string]string {
 
 	imageList := info.(*model.ImageCollection)
 	for _, v := range imageList.List {
+		click, err := strconv.Atoi(v.Click)
+		if err != nil || click < clickThreshold {
+			continue
+		}
 		tURL := rootURL + v.URL
 		m[tURL] = v.ID
 	}
@@ -135,6 +145,10 @@ func appendImageURLs(rootURL, jsonURL string, m map[string]string) {
 	//
 	imageList := info.(*model.ImageCollection)
 	for _, v := range imageList.List {
+		click, err := strconv.Atoi(v.Click)
+		if err != nil || click < clickThreshold {
+			continue
+		}
 		tURL := rootURL + v.URL
 		m[tURL] = v.ID
 	}

@@ -22,25 +22,29 @@ type badgerConfig struct {
 	ValueDir string
 }
 
-type commonConfig struct {
+type CommonConfig struct {
 	// entry url for scrapping
 	URL string
 
 	// download directory
-	DirName string
+	DownloadDir string
+
+	CacheDir string
 }
 
 type BookConfig struct {
-	commonConfig
+	CommonConfig
 }
 
 type JSONImageConfig struct {
-	commonConfig
-	ThresHold int
+	URL         string
+	DownloadDir string
+	CacheDir    string
+	ThresHold   int
 }
 
 type ImageConfig struct {
-	commonConfig
+	CommonConfig
 }
 
 var (
@@ -73,6 +77,7 @@ func Init(ctx context.Context) {
 func loadTOML() error {
 	viper.SetConfigName("config") // name of config file (without extension)
 	viper.AddConfigPath(".")
+	viper.AddConfigPath("./config")
 	err := viper.ReadInConfig()
 	if err != nil {
 		return err

@@ -9,9 +9,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Route - route url from configuration
 func Route(ctx context.Context) {
 	var insighter basic.Insighter
 	t := config.BaseConfig.Type
-	insighter = &basic.ImageInsighter{Config: viper.Sub(t)}
-	insighter.Insight()
+	insighter = basic.NewJSONImageInsighter(viper.Sub(t))
+	insighter.Insight(ctx)
 }

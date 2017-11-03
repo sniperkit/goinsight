@@ -45,7 +45,8 @@ func TestWriteOnly(t *testing.T) {
 
 func TestDownload(t *testing.T) {
 	url := "https://previews.123rf.com/images/benjaminboeckle/benjaminboeckle1611/benjaminboeckle161100512/67028130-Cape-of-good-Hope-in-South-Africa-Stock-Photo.jpg"
-	err := Download(url, "tmp")
+	filename := FilenameFromURL(url)
+	err := Download(url, "tmp/"+filename, true)
 	fmt.Println(err)
 }
 

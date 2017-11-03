@@ -6,13 +6,17 @@ import (
 	"github.com/shohi/goinsight/config"
 	"github.com/shohi/goinsight/router"
 	"github.com/shohi/goinsight/util"
+	"go.uber.org/zap"
 	"golang.org/x/net/context"
 )
 
-func main() {
-	defer util.LogProcessTime(time.Now())
+var logger = zap.NewExample()
 
-	ctx := context.WithCacel(context.Background())
+func main() {
+	defer util.LogProcessTime(logger, time.Now())
+
+	ctx, doCancelFunc := context.WithCancel(context.Background())
+	defer doCancelFunc()
 
 	// load config
 	config.Init(ctx)

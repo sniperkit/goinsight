@@ -84,9 +84,19 @@ func (i *JSONImageInsighter) Insight(ctx context.Context) {
 		defer txn.Discard()
 
 		link := e.Attr("data-original")
+
+		// Check whether or not in database
+		item, err := txn.Get([]byte(link))
+		if err == nil {
+			_, e := item.Value()
+			if e == nil {
+				return
+			}
+		}
+
 		logger.Infow("", zap.String("link", link))
 		fp := i.filepath(link, e.Request.Ctx.Get("ID"))
-		err := util.Download(link, fp, false)
+		err = util.Download(link, fp, false)
 		val := "1"
 		if err != nil {
 			logger.Infow("failed to download image",
@@ -120,11 +130,14 @@ func (i *JSONImageInsighter) Insight(ctx context.Context) {
 // NewJSONImageInsighter -- create new JSONImageInsighter using configuration
 func NewJSONImageInsighter(v *viper.Viper) *JSONImageInsighter {
 	var cfg config.JSONImageConfig
-	err := v.Unmarshal(cfg)
+	err := v.Unmarshal(&cfg)
+
 	if err != nil {
 		logger.Info(err)
 		return nil
 	}
+
+	logger.Info(cfg)
 	return &JSONImageInsighter{cfg}
 }
 
@@ -194,9 +207,9 @@ func (i *JSONImageInsighter) appendImageURLs(rootURL, jsonURL string, m map[stri
 func (i *JSONImageInsighter) filepath(url, subdir string) (fp string) {
 	filename := util.FilenameFromURL(url)
 	if subdir == "" {
-		fp = filepath.Join(i.Config.DirName, filename)
+		fp = filepath.Join(i.Config.DownloadDir, filename)
 	} else {
-		fp = filepath.Join(i.Config.DirName, subdir, filename)
+		fp = filepath.Join(i.Config.DownloadDir, subdir, filename)
 	}
 	return
 }

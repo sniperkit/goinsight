@@ -95,7 +95,8 @@ func (i *JSONImageInsighter) Insight(ctx context.Context) {
 		}
 
 		logger.Infow("", zap.String("link", link))
-		fp := i.filepath(link, e.Request.Ctx.Get("ID"))
+		// fp := i.filepath(link, e.Request.Ctx.Get("ID"))
+		fp := i.filepath(link, "")
 		err = util.Download(link, fp, false)
 		val := "1"
 		if err != nil {

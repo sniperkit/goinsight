@@ -22,6 +22,7 @@ type badgerConfig struct {
 	ValueDir string
 }
 
+// CommonConfig - common config
 type CommonConfig struct {
 	// entry url for scrapping
 	URL string
@@ -32,25 +33,36 @@ type CommonConfig struct {
 	CacheDir string
 }
 
+// BookConfig - configuration for book info scrapping
 type BookConfig struct {
 	CommonConfig
 }
 
+// JSONImageConfig - configuration for downloading image whose info is in json format
 type JSONImageConfig struct {
-	URL         string
-	DownloadDir string
-	CacheDir    string
-	ThresHold   int
+	CommonConfig
+	ThresHold int
 }
 
+// MfwImageConfig - configuration for downloading info from mfw
+type MfwImageConfig struct {
+	CommonConfig
+}
+
+// ImageConfig - configuration for downloading image from regular pages
 type ImageConfig struct {
 	CommonConfig
 }
 
 var (
-	BaseConfig   baseConfig
+	// BaseConfig - config type
+	BaseConfig baseConfig
+
+	// BadgerConfig - config of badger
 	BadgerConfig badgerConfig
-	DB           *badger.DB
+
+	// DB - badger DB
+	DB *badger.DB
 )
 
 var logger = zap.NewExample().Sugar()

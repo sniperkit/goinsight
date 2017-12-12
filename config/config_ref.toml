@@ -21,3 +21,8 @@ DownloadDir = "_dl/book"
 [github]
 URL = ""
 DownloadDir = "_dl/github"
+
+[mfw]
+URL = "http://www.mafengwo.cn/app/calendar.php?year=2017"
+DownloadDir = "_dl/image_mfw"
+CacheDir = "_cache"

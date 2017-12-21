@@ -2,7 +2,7 @@
 package router
 
 import (
-	"golang.org/x/net/context"
+	"context"
 
 	"github.com/shohi/goinsight/basic"
 	"github.com/shohi/goinsight/config"

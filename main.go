@@ -1,13 +1,13 @@
 package main
 
 import (
+	"context"
 	"time"
 
 	"github.com/shohi/goinsight/config"
 	"github.com/shohi/goinsight/router"
 	"github.com/shohi/goinsight/util"
 	"go.uber.org/zap"
-	"golang.org/x/net/context"
 )
 
 var logger = zap.NewExample()

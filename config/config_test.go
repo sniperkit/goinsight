@@ -1,11 +1,10 @@
 package config
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
-
-	"golang.org/x/net/context"
 )
 
 func TestLoadTOML(t *testing.T) {

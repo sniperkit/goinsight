@@ -2,6 +2,7 @@ package basic
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -15,7 +16,6 @@ import (
 	"github.com/shohi/goinsight/util"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"golang.org/x/net/context"
 )
 
 // JSONImageInsighter - fetch images by given json url

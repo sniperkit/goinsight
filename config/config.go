@@ -2,9 +2,8 @@
 package config
 
 import (
+	"context"
 	"os"
-
-	"golang.org/x/net/context"
 
 	"github.com/dgraph-io/badger"
 	"github.com/shohi/goinsight/util"

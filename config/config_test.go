@@ -2,9 +2,11 @@ package config
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"testing"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 func TestLoadTOML(t *testing.T) {
@@ -14,5 +16,18 @@ func TestLoadTOML(t *testing.T) {
 		time.Sleep(time.Second)
 	}()
 	Init(ctx)
-	fmt.Println(BaseConfig)
+	log.Println(BaseConfig)
+
+	// unmarshal direct fields
+	var cfg SmthRentConfig
+	vs := viper.Sub("rent-smth")
+	vs.Unmarshal(&cfg)
+
+	// unmarshal component
+	err := vs.Unmarshal(&cfg.CommonConfig)
+
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println(cfg)
 }

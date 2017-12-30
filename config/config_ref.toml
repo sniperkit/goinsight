@@ -26,3 +26,10 @@ DownloadDir = "_dl/github"
 URL = "http://www.mafengwo.cn/app/calendar.php?year=2017"
 DownloadDir = "_dl/image_mfw"
 CacheDir = "_cache"
+
+[rent-smth]
+URL = "http://www.newsmth.net/nForum/board/HouseRent?ajax"
+DownloadDir = "_dl/rent/smth"
+CacheDir = "_cache"
+BannedAuthors = "CtrlA|原贴已删除"
+BannedTitles = "公告|求租|权限|已租|求"

@@ -51,6 +51,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/gocarina/gocsv"
+  packages = ["."]
+  revision = "7099e67763c29f812fa2ed7083f32e38be60125a"
+
+[[projects]]
+  branch = "master"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
   revision = "1643683e1b54a9e88ad26d98f81400c8c9d9f4f9"
@@ -60,6 +66,12 @@
   name = "github.com/hashicorp/hcl"
   packages = [".","hcl/ast","hcl/parser","hcl/scanner","hcl/strconv","hcl/token","json/parser","json/scanner","json/token"]
   revision = "23c074d0eceb2b8a5bfdbb271ab780cde70f05a8"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/jinzhu/now"
+  packages = ["."]
+  revision = "d939ba741945c047cac69c329c5fb0d6b4a06520"
 
 [[projects]]
   name = "github.com/kennygrant/sanitize"
@@ -196,6 +208,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3b5336ebabd4bd3eafc097eb296b84ff675ea76545a56a586268f45073c990e1"
+  inputs-digest = "c09a4ed79cbe4b1542600d364b065f920e8c7089dee575605b3eb946ecb2b497"
   solver-name = "gps-cdcl"
   solver-version = 1

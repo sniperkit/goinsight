@@ -53,6 +53,13 @@ type ImageConfig struct {
 	CommonConfig
 }
 
+// SmthRentConfig - configuration for fetching rent information from SMTH
+type SmthRentConfig struct {
+	CommonConfig
+	BannedAuthors string
+	BannedTitles  string
+}
+
 var (
 	// BaseConfig - config type
 	BaseConfig baseConfig

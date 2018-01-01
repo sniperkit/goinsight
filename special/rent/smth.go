@@ -138,7 +138,7 @@ type SmthRentInsighter struct {
 	bannedTitles  mapset.Set
 }
 
-// Insight - insight image
+// Insight - insight smth rent
 func (s *SmthRentInsighter) Insight(ctx context.Context) {
 	defer logger.Sync()
 
@@ -208,8 +208,8 @@ func (s *SmthRentInsighter) Insight(ctx context.Context) {
 	}
 
 	filename := filepath.Join(s.Config.DownloadDir, "smth_"+fmt.Sprintf("%v", time.Now().Unix()))
-	// err = outputCSV(filename, dataList)
-	outputXLSX(filename, dataList)
+	// err = s.outputCSV(filename, dataList)
+	s.outputXLSX(filename, dataList)
 
 	if err != nil {
 		logger.Infow("output result error", "error", err)
@@ -284,7 +284,7 @@ func (s *SmthRentInsighter) isValid(data *SmthData) (v bool) {
 	return
 }
 
-func outputCSV(filename string, dataList []*SmthData) error {
+func (s *SmthRentInsighter) outputCSV(filename string, dataList []*SmthData) error {
 	fp := filename + ".csv"
 	file, err := util.CreateFile(fp)
 	if err != nil {
@@ -293,7 +293,7 @@ func outputCSV(filename string, dataList []*SmthData) error {
 	return gocsv.MarshalFile(&dataList, file)
 }
 
-func outputXLSX(filename string, dataList []*SmthData) error {
+func (s *SmthRentInsighter) outputXLSX(filename string, dataList []*SmthData) error {
 	var err error
 	fp := filename + ".xlsx"
 
@@ -304,6 +304,13 @@ func outputXLSX(filename string, dataList []*SmthData) error {
 		return err
 	}
 
+	headerRow := sheet.AddRow()
+	headerRow.AddCell().SetValue("title")
+	headerRow.AddCell().SetValue("href")
+	headerRow.AddCell().SetValue("author")
+	headerRow.AddCell().SetValue("comments")
+	headerRow.AddCell().SetValue("last")
+
 	for _, data := range dataList {
 		row := sheet.AddRow()
 
@@ -311,7 +318,6 @@ func outputXLSX(filename string, dataList []*SmthData) error {
 		row.AddCell().SetValue(data.Title)
 		row.AddCell().SetValue(data.Href)
 		row.AddCell().SetValue(data.Author)
-		row.AddCell().SetValue(data.Comments)
 		row.AddCell().SetValue(data.Comments)
 		row.AddCell().SetDateTime(data.Last)
 	}

@@ -60,6 +60,15 @@ type SmthRentConfig struct {
 	BannedTitles  string
 }
 
+// TcRentConfig - configuration for fetching rent information from `58同城`
+type TcRentConfig struct {
+	CommonConfig
+
+	AllowedDistricts  string
+	BannedRooms       string
+	DefaultTotalPages int
+}
+
 var (
 	// BaseConfig - config type
 	BaseConfig baseConfig

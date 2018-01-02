@@ -269,9 +269,9 @@ func (s *SmthRentInsighter) isValid(data *SmthData) (v bool) {
 	s.bannedTitles.Each(func(item interface{}) bool {
 		if strings.Contains(data.Title, item.(string)) {
 			v = false
-			return false
+			return true
 		}
-		return true
+		return false
 	})
 
 	if !v {

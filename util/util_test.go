@@ -2,7 +2,7 @@ package util
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/url"
 	"strings"
 	"testing"
@@ -29,7 +29,7 @@ func TestStringTrim(t *testing.T) {
 }
 
 func TestStringSplit(t *testing.T) {
-	fmt.Println(strings.Split("a/b/c.png", "/"))
+	log.Println(strings.Split("a/b/c.png", "/"))
 }
 
 func TestWriteOnly(t *testing.T) {
@@ -47,7 +47,7 @@ func TestDownload(t *testing.T) {
 	url := "https://previews.123rf.com/images/benjaminboeckle/benjaminboeckle1611/benjaminboeckle161100512/67028130-Cape-of-good-Hope-in-South-Africa-Stock-Photo.jpg"
 	filename := FilenameFromURL(url)
 	err := Download(url, "tmp/"+filename, true)
-	fmt.Println(err)
+	log.Println(err)
 }
 
 func TestJSONMarshal(t *testing.T) {
@@ -56,12 +56,12 @@ func TestJSONMarshal(t *testing.T) {
 	}
 
 	data, _ := json.Marshal(c)
-	fmt.Println(string(data))
+	log.Println(string(data))
 }
 
 func TestURLHost(t *testing.T) {
 	u, _ := url.Parse("http://localhost:9090/app")
-	fmt.Println(u.Scheme)
+	log.Println(u.Scheme)
 }
 
 func TestURLParse(t *testing.T) {
@@ -69,31 +69,41 @@ func TestURLParse(t *testing.T) {
 
 	u, _ := url.Parse(baseURL)
 
-	fmt.Println(u.Scheme)
-	fmt.Println(u.Host)
-	fmt.Println(u.Path)
-	fmt.Println(u.Fragment)
-	fmt.Println(u.RawQuery)
+	log.Println(u.Scheme)
+	log.Println(u.Host)
+	log.Println(u.Path)
+	log.Println(u.Fragment)
+	log.Println(u.RawQuery)
 
 	m, _ := url.ParseQuery(u.RawQuery)
-	fmt.Println(m["page"][0])
+	log.Println(m["page"][0])
 }
 
 func TestGetPageURLs(t *testing.T) {
 	baseURL := "http://localhost:9090/app/list?page=1&action=list"
 	urls := GetPageURLs(baseURL, 10, true)
-	fmt.Println(urls)
+	log.Println(urls)
 }
 
 func TestGetPageParamter(t *testing.T) {
 	baseURL := "http://localhost:9090/app/list?action=list"
 	page := GetPageParamter(baseURL)
 
-	fmt.Println(page)
+	log.Println(page)
 }
 
 func TestTimeSubtract(t *testing.T) {
 	start := time.Now()
 	time.Sleep(1 * time.Second)
-	fmt.Println(time.Since(start))
+	log.Println(time.Since(start))
+}
+
+func TestGetResourceName(t *testing.T) {
+	uri := "http://localhost:8080/path/to/some.jpeg?hello"
+	log.Println(GetResourceName(uri))
+}
+
+func TestGetResourceSuffix(t *testing.T) {
+	uri := "http://localhost:8080/path/to/some.jpeg?hello"
+	log.Println(GetResourceSuffix(uri))
 }

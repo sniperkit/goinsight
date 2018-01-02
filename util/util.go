@@ -126,3 +126,31 @@ func GetContent(url string) ([]byte, error) {
 
 	return body, nil
 }
+
+// GetResourceName - get resource name in uri
+func GetResourceName(uri string) (string, error) {
+	rawURL, err := url.Parse(uri)
+	if err != nil {
+		return "", err
+	}
+
+	strs := strings.Split(rawURL.Path, "/")
+	lastItem := strs[len(strs)-1]
+
+	return strings.Split(lastItem, ".")[0], nil
+}
+
+// GetResourceSuffix - get resource suffix in uri, including `.`
+func GetResourceSuffix(uri string) (string, error) {
+
+	rawURL, err := url.Parse(uri)
+	if err != nil {
+		return "", err
+	}
+
+	strs := strings.Split(rawURL.Path, "/")
+	lastItem := strs[len(strs)-1]
+	subItems := strings.Split(lastItem, ".")
+
+	return "." + subItems[len(subItems)-1], nil
+}

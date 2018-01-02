@@ -45,3 +45,10 @@ CacheDir = "_cache"
 NewCache = "true"
 AllowedDistricts = "呼家楼|亮马桥|三元桥|三里屯|朝阳公园|水碓子|甜水园|团结湖|工体|燕莎|农业展览馆|麦子店"
 DefaultTotalPages = 100000
+
+[tour-mfw]
+URL = "http://www.mafengwo.cn/yj/10176/1-0-%d.html"
+DownloadDir = "_dl/tour/mfw"
+CacheDir = "_cache/tour/mfw"
+NewCache = "true"
+

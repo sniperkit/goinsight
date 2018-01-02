@@ -7,6 +7,7 @@ import (
 	"github.com/shohi/goinsight/basic"
 	"github.com/shohi/goinsight/config"
 	"github.com/shohi/goinsight/special/rent"
+	"github.com/shohi/goinsight/special/tour"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
@@ -22,6 +23,8 @@ func Route(ctx context.Context) {
 		insighter = rent.NewSmthRentInsighter(viper.Sub(t))
 	} else if t == "rent-tc" {
 		insighter = rent.NewTcRentInsighter(viper.Sub(t))
+	} else if t == "tour-mfw" {
+		insighter = tour.NewMfwTourInsighter(viper.Sub(t))
 	} else {
 		insighter = basic.NewJSONImageInsighter(viper.Sub(t))
 	}

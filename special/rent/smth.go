@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -150,7 +150,11 @@ func (s *SmthRentInsighter) Insight(ctx context.Context) {
 
 	// Cache responses to prevent multiple download of pages
 	// even if the collector is restarted
-	c.CacheDir = "./_cache"
+	c.CacheDir = s.Config.CacheDir
+
+	if s.Config.NewCache {
+		os.RemoveAll(c.CacheDir)
+	}
 
 	//
 	err := s.getPageURLs()
@@ -207,7 +211,8 @@ func (s *SmthRentInsighter) Insight(ctx context.Context) {
 		return
 	}
 
-	filename := filepath.Join(s.Config.DownloadDir, "smth_"+fmt.Sprintf("%v", time.Now().Unix()))
+	filename := filepath.Join(s.Config.DownloadDir, "smth_"+time.Now().Format("20060102150405"))
+	logger.Infow("fetching completed", "total_number", len(dataList), "filename", filename)
 	// err = s.outputCSV(filename, dataList)
 	s.outputXLSX(filename, dataList)
 
@@ -220,7 +225,7 @@ func (s *SmthRentInsighter) getPageURLs() error {
 	homePage := s.Config.URL + "&p=1"
 	statusCode, body, err := s.client.Get(nil, homePage)
 
-	logger.Info("home page", homePage)
+	logger.Infow("", "home_page", homePage)
 
 	if err != nil {
 		return err
@@ -270,7 +275,6 @@ func (s *SmthRentInsighter) isValid(data *SmthData) (v bool) {
 	}
 
 	if s.bannedAuthors.Contains(data.Author) || s.authorSet.Contains(data.Author) {
-		logger.Infow("info", "author", data.Author)
 		v = false
 		return
 	}
@@ -296,6 +300,15 @@ func (s *SmthRentInsighter) outputCSV(filename string, dataList []*SmthData) err
 func (s *SmthRentInsighter) outputXLSX(filename string, dataList []*SmthData) error {
 	var err error
 	fp := filename + ".xlsx"
+
+	baseDir := filepath.Dir(fp)
+	if exists, err := util.Exists(baseDir); !exists || (err != nil) {
+		err = os.MkdirAll(baseDir, os.ModePerm)
+		if err != nil {
+			logger.Errorw("create base dir for saving result err", "error_msg", err, "base_dir", baseDir)
+			return err
+		}
+	}
 
 	file := xlsx.NewFile()
 	sheet, err := file.AddSheet("Sheet1")
@@ -323,6 +336,10 @@ func (s *SmthRentInsighter) outputXLSX(filename string, dataList []*SmthData) er
 	}
 
 	err = file.Save(fp)
+
+	if err != nil {
+		logger.Infow("save result to xlsx error", "error_msg", err)
+	}
 
 	return err
 }

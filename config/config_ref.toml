@@ -5,6 +5,7 @@ Type = "json-image"
 [badger]
 Dir = "_db/badger"
 ValueDir = "_db/badger"
+NewDB = "true"
 
 
 [json-image]
@@ -31,6 +32,7 @@ CacheDir = "_cache"
 URL = "http://www.newsmth.net/nForum/board/HouseRent?ajax"
 DownloadDir = "_dl/rent/smth"
 CacheDir = "_cache"
+NewCache = "true"
 BannedAuthors = "CtrlA|原贴已删除"
 BannedTitles = "公告|求租|权限|已租|求"
 
@@ -39,5 +41,6 @@ BannedTitles = "公告|求租|权限|已租|求"
 URL = "http://bj.58.com/chaoyang/hezu/0/pn%d/?minprice=1800_4000"
 DownloadDir = "_dl/rent/tc"
 CacheDir = "_cache"
+NewCache = "true"
 AllowedDistricts = "呼家楼|亮马桥|三元桥|三里屯|朝阳公园|水碓子|甜水园|团结湖|工体|燕莎|农业展览馆|麦子店"
 DefaultTotalPages = 100000

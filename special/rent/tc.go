@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -14,6 +15,7 @@ import (
 	"github.com/asciimoo/colly"
 	"github.com/deckarep/golang-set"
 	"github.com/shohi/goinsight/config"
+	"github.com/shohi/goinsight/util"
 	"github.com/spf13/viper"
 	"github.com/tealeg/xlsx"
 	"github.com/valyala/fasthttp"
@@ -167,7 +169,11 @@ func (s *TcRentInsighter) Insight(ctx context.Context) {
 
 	// Cache responses to prevent multiple download of pages
 	// even if the collector is restarted
-	c.CacheDir = "./_cache"
+	c.CacheDir = s.Config.CacheDir
+
+	if s.Config.NewCache {
+		os.RemoveAll(c.CacheDir)
+	}
 
 	//
 	err := s.getPageURLs()
@@ -236,7 +242,7 @@ func (s *TcRentInsighter) Insight(ctx context.Context) {
 		return
 	}
 
-	filename := filepath.Join(s.Config.DownloadDir, "tc_"+fmt.Sprintf("%v", time.Now().Unix()))
+	filename := filepath.Join(s.Config.DownloadDir, "tc_"+time.Now().Format("20060102150405"))
 	s.outputXLSX(filename, dataList)
 
 	if err != nil {
@@ -271,6 +277,15 @@ func (s *TcRentInsighter) isValid(d *TcData) (v bool) {
 func (s *TcRentInsighter) outputXLSX(filename string, dataList []*TcData) error {
 	var err error
 	fp := filename + ".xlsx"
+
+	baseDir := filepath.Dir(fp)
+	if exists, err := util.Exists(baseDir); !exists || (err != nil) {
+		err = os.MkdirAll(baseDir, os.ModePerm)
+		if err != nil {
+			logger.Errorw("create base dir for saving result err", "error_msg", err, "base_dir", baseDir)
+			return err
+		}
+	}
 
 	file := xlsx.NewFile()
 	sheet, err := file.AddSheet("Sheet1")

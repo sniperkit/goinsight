@@ -17,6 +17,7 @@ func TestLoadTOML(t *testing.T) {
 	}()
 	Init(ctx)
 	log.Println(BaseConfig)
+	log.Println(BadgerConfig)
 
 	// unmarshal direct fields
 	var cfg SmthRentConfig

@@ -19,6 +19,7 @@ type baseConfig struct {
 type badgerConfig struct {
 	Dir      string
 	ValueDir string
+	NewDB    bool
 }
 
 // CommonConfig - common config
@@ -30,6 +31,7 @@ type CommonConfig struct {
 	DownloadDir string
 
 	CacheDir string
+	NewCache bool
 }
 
 // BookConfig - configuration for book info scrapping
@@ -129,6 +131,13 @@ func initDB(ctx context.Context) {
 	opts := badger.DefaultOptions
 	opts.Dir = BadgerConfig.Dir
 	opts.ValueDir = BadgerConfig.ValueDir
+
+	newDB := BadgerConfig.NewDB
+
+	if newDB {
+		os.RemoveAll(opts.Dir)
+		os.RemoveAll(opts.ValueDir)
+	}
 
 	if exists, err := util.Exists(opts.Dir); !exists || (err != nil) {
 		err = os.MkdirAll(opts.Dir, os.ModePerm)

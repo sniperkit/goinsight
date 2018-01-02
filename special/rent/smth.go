@@ -211,6 +211,10 @@ func (s *SmthRentInsighter) Insight(ctx context.Context) {
 		return
 	}
 
+	if s.Config.NewDownload {
+		os.RemoveAll(s.Config.DownloadDir)
+	}
+
 	filename := filepath.Join(s.Config.DownloadDir, "smth_"+time.Now().Format("20060102150405"))
 	logger.Infow("fetching completed", "total_number", len(dataList), "filename", filename)
 	// err = s.outputCSV(filename, dataList)

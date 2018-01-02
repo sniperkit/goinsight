@@ -29,6 +29,7 @@ type CommonConfig struct {
 
 	// download directory
 	DownloadDir string
+	NewDownload bool
 
 	CacheDir string
 	NewCache bool

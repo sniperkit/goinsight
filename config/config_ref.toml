@@ -31,6 +31,7 @@ CacheDir = "_cache"
 [rent-smth]
 URL = "http://www.newsmth.net/nForum/board/HouseRent?ajax"
 DownloadDir = "_dl/rent/smth"
+NewDownload = "true"
 CacheDir = "_cache"
 NewCache = "true"
 BannedAuthors = "CtrlA|原贴已删除"

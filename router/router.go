@@ -20,6 +20,8 @@ func Route(ctx context.Context) {
 
 	if t == "rent-smth" {
 		insighter = rent.NewSmthRentInsighter(viper.Sub(t))
+	} else if t == "rent-tc" {
+		insighter = rent.NewTcRentInsighter(viper.Sub(t))
 	} else {
 		insighter = basic.NewJSONImageInsighter(viper.Sub(t))
 	}

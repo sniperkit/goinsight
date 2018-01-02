@@ -26,6 +26,12 @@
   revision = "ca0b7983f7a266a74fa1a6ba5d9bfa91fd82b7b3"
 
 [[projects]]
+  name = "github.com/deckarep/golang-set"
+  packages = ["."]
+  revision = "1d4478f51bed434f1dadf96dcd9b43aabac66795"
+  version = "v1.7"
+
+[[projects]]
   name = "github.com/dgraph-io/badger"
   packages = [".","options","protos","skl","table","y"]
   revision = "7f9d6def067ff42b64d3186dd1748d856e840bd0"
@@ -152,6 +158,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/tealeg/xlsx"
+  packages = ["."]
+  revision = "8be35264fa75a1bbe954ce51eba04f273e2c59e5"
+  version = "v1.0.3"
+
+[[projects]]
   branch = "master"
   name = "github.com/temoto/robotstxt"
   packages = ["."]
@@ -208,6 +220,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c09a4ed79cbe4b1542600d364b065f920e8c7089dee575605b3eb946ecb2b497"
+  inputs-digest = "46e758d63744e05fdfe7f19e4956d370658f07e8d5409d9e2a106153ecc10222"
   solver-name = "gps-cdcl"
   solver-version = 1

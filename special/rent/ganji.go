@@ -19,8 +19,8 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-// TcData ...
-type TcData struct {
+// GanjiData ...
+type GanjiData struct {
 	Title    string    `csv:"title"`
 	Rental   float64   `csv:"rental"`
 	Room     string    `csv:"Room"`
@@ -31,7 +31,7 @@ type TcData struct {
 	Last     time.Time `csv:"last"`
 }
 
-func (d *TcData) populate(s *goquery.Selection) (err error) {
+func (d *GanjiData) populate(s *goquery.Selection) (err error) {
 	// time
 	sortid, exists := s.Attr("sortid")
 	if exists {
@@ -66,8 +66,8 @@ func (d *TcData) populate(s *goquery.Selection) (err error) {
 	return
 }
 
-// NewTcRentInsighter -- create new TcRentInsighter using configuration
-func NewTcRentInsighter(v *viper.Viper) *TcRentInsighter {
+// NewGanjiRentInsighter -- create new GanjiRentInsighter using configuration
+func NewGanjiRentInsighter(v *viper.Viper) *TcRentInsighter {
 	var cfg config.TcRentConfig
 
 	// unmarshal direct fields
@@ -107,9 +107,9 @@ func NewTcRentInsighter(v *viper.Viper) *TcRentInsighter {
 	}
 }
 
-// TcRentInsighter ...
-type TcRentInsighter struct {
-	Config config.TcRentConfig
+// GanjiRentInsighter ...
+type GanjiRentInsighter struct {
+	Config config.GanjiRentConfig
 
 	pageURLs []string
 	client   fasthttp.Client
@@ -119,7 +119,7 @@ type TcRentInsighter struct {
 	stopFlag         bool // if response url is different from request's, we need to stop fetching
 }
 
-func (s *TcRentInsighter) getPageURLs() error {
+func (s *GanjiRentInsighter) getPageURLs() error {
 	homePage := fmt.Sprintf(s.Config.URL, 1)
 
 	statusCode, body, err := s.client.Get(nil, homePage)
@@ -154,13 +154,13 @@ func (s *TcRentInsighter) getPageURLs() error {
 	return nil
 }
 
-// Insight - insight 58tongcheng rent
+// Insight - insight ganji rent
 // implement interface
-func (s *TcRentInsighter) Insight(ctx context.Context) {
+func (s *GanjiRentInsighter) Insight(ctx context.Context) {
 	defer logger.Sync()
 
 	//
-	var dataList []*TcData
+	var dataList []*GanjiData
 
 	// Instantiate default collector
 	c := colly.NewCollector()
@@ -186,7 +186,7 @@ func (s *TcRentInsighter) Insight(ctx context.Context) {
 			return
 		}
 
-		data := &TcData{}
+		data := &GanjiData{}
 		data.populate(e.DOM)
 
 		if !s.isValid(data) {
@@ -244,7 +244,7 @@ func (s *TcRentInsighter) Insight(ctx context.Context) {
 	}
 }
 
-func (s *TcRentInsighter) isValid(d *TcData) (v bool) {
+func (s *GanjiRentInsighter) isValid(d *GanjiData) (v bool) {
 	if d == nil {
 		return false
 	}
@@ -268,7 +268,7 @@ func (s *TcRentInsighter) isValid(d *TcData) (v bool) {
 	return
 }
 
-func (s *TcRentInsighter) outputXLSX(filename string, dataList []*TcData) error {
+func (s *GanjiRentInsighter) outputXLSX(filename string, dataList []*GanjiData) error {
 	var err error
 	fp := filename + ".xlsx"
 

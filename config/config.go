@@ -69,6 +69,15 @@ type TcRentConfig struct {
 	DefaultTotalPages int
 }
 
+// GanjiRentConfig - configuration for fetching rent information from `ganji`
+type GanjiRentConfig struct {
+	CommonConfig
+
+	AllowedDistricts  string
+	BannedRooms       string
+	DefaultTotalPages int
+}
+
 var (
 	// BaseConfig - config type
 	BaseConfig baseConfig
